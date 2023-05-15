@@ -33,6 +33,10 @@ public class VideoInputDTO {
 			erros.add("Título do vídeo não pode ser nulo ou vazio.");
 		}
 		
+		if(StringUtils.isEmpty(getDescricao()) || StringUtils.isBlank(getDescricao())) {
+			erros.add("Descrição do vídeo não pode ser nula ou vazia.");
+		}
+		
 		if(StringUtils.isEmpty(getUrl()) || StringUtils.isBlank(getUrl())) {
 			erros.add("Url do vídeo não pode ser nula ou vazia.");
 		}
