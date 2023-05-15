@@ -20,7 +20,7 @@ public class VideoServiceImpl implements VideoService {
 	}
 
 	@Override
-	public Optional<Video> obter(Long id) {
+	public Optional<Video> obter(Long id) throws CustomException {
 		validaId(id);
 		return repository.findById(id);
 	}

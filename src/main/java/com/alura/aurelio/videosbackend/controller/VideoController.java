@@ -28,13 +28,15 @@ public class VideoController {
 	@Autowired VideoService service;
 
 	@GetMapping
+	@ResponseStatus(code = HttpStatus.OK)
 	public List<Video> getAll() {
 		return service.obterTodos();
 		
 	}
 	
 	@GetMapping("/{id}")
-	public Optional<Video> getById(@PathVariable Long id) {
+	@ResponseStatus(code = HttpStatus.OK)
+	public Optional<Video> getById(@PathVariable Long id) throws CustomException {
 		return service.obter(id);
 	}
 	
