@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alura.aurelio.videosbackend.domain.Video;
 import com.alura.aurelio.videosbackend.domain.VideoInputDTO;
+import com.alura.aurelio.videosbackend.infra.CustomException;
 import com.alura.aurelio.videosbackend.service.VideoService;
 
 @RestController
@@ -36,18 +37,17 @@ public class VideoController {
 	}
 	
 	@PostMapping
-	public void post(@Validated(VideoInputDTO.class) @RequestBody VideoInputDTO videoDTO) throws Exception {
+	public void post(@Validated(VideoInputDTO.class) @RequestBody VideoInputDTO videoDTO) throws CustomException {
 		service.criar(videoDTO.toVideo());
 	}
 	
 	@PutMapping("/{id}")
-	public void put(@Validated(VideoInputDTO.class) @RequestBody VideoInputDTO videoDTO, @PathVariable Long id) throws Exception {
+	public void put(@Validated(VideoInputDTO.class) @RequestBody VideoInputDTO videoDTO, @PathVariable Long id) throws CustomException {
 		service.atualizar(videoDTO.toVideo(), id);
 	}
 	
 	@DeleteMapping("/{id}")
-	public void delete(@PathVariable Long id) {
+	public void delete(@PathVariable Long id) throws CustomException {
 		service.remover(id);
 	}
-	//TODO: implementar exceção personalizada com a mensagem do erro. ExceptionHandler!
 }
