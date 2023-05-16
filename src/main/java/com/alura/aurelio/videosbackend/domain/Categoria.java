@@ -12,24 +12,21 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-@Table(name = "VIDEOS")
+@Table(name = "CATEGORIAS")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Video {
+public class Categoria {
 	
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "ID", unique = true, nullable = false)
 	private Long id;
 	
-	@Column(name = "TITULO", nullable = false, length = 70)
+	@Column(name = "TITULO", nullable = false, length = 30)
 	private String titulo;
 	
-	@Column(name = "DESCRICAO", nullable = false, length = 250)
+	@Column(name = "COR", nullable = false, length = 30)
 	private String descricao;
-	
-	@Column(name = "URL", nullable = false, length = 70)
-	private String url;
 	
 	
 }

@@ -2,39 +2,41 @@ package com.alura.aurelio.videosbackend.service.impl;
 
 import java.util.List;
 import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.alura.aurelio.videosbackend.domain.Video;
+
+import com.alura.aurelio.videosbackend.domain.Categoria;
 import com.alura.aurelio.videosbackend.infra.CustomException;
-import com.alura.aurelio.videosbackend.repository.VideoRepository;
-import com.alura.aurelio.videosbackend.service.VideoService;
+import com.alura.aurelio.videosbackend.repository.CategoriaRepository;
+import com.alura.aurelio.videosbackend.service.CategoriaService;
 
 @Service
-public class VideoServiceImpl implements VideoService {
+public class CategoriaServiceImpl implements CategoriaService {
 	
-	@Autowired VideoRepository repository;
+	@Autowired CategoriaRepository repository;
 
 	@Override
-	public List<Video> obterTodos() {
+	public List<Categoria> obterTodos() {
 		return repository.findAll();
 	}
 
 	@Override
-	public Optional<Video> obter(Long id) throws CustomException {
+	public Optional<Categoria> obter(Long id) throws CustomException {
 		validaId(id);
 		return repository.findById(id);
 	}
 
 	@Override
-	public void criar(Video video) {
-		repository.save(video);
+	public void criar(Categoria categoria) {
+		repository.save(categoria);
 		
 	}
 
 	@Override
-	public void atualizar(Video video, Long id) {
-		video.setId(id);
-		repository.save(video);
+	public void atualizar(Categoria categoria, Long id) {
+		categoria.setId(id);
+		repository.save(categoria);
 		validaId(id);
 		
 	}

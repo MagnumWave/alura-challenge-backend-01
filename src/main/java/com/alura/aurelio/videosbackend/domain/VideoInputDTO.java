@@ -33,12 +33,24 @@ public class VideoInputDTO {
 			erros.add("Título do vídeo não pode ser nulo ou vazio.");
 		}
 		
+		if(getTitulo().length() > 70) {
+			erros.add("Título do vídeo não pode ter mais do que 70 caracteres.");
+		}
+		
 		if(StringUtils.isEmpty(getDescricao()) || StringUtils.isBlank(getDescricao())) {
 			erros.add("Descrição do vídeo não pode ser nula ou vazia.");
 		}
 		
+		if(getDescricao().length() > 250) {
+			erros.add("Descrição do vídeo não pode ter mais do que 250 caracteres.");
+		}
+		
 		if(StringUtils.isEmpty(getUrl()) || StringUtils.isBlank(getUrl())) {
 			erros.add("Url do vídeo não pode ser nula ou vazia.");
+		}
+		
+		if(getUrl().length() > 70) {
+			erros.add("Url do vídeo não pode ter mais do que 70 caracteres.");
 		}
 		
 		if(!erros.isEmpty()) {
