@@ -57,4 +57,20 @@ public class VideoController {
 	public void delete(@PathVariable Long id) throws CustomException {
 		service.remover(id);
 	}
+	
+	//TODO: no banco, criar uma tabela CATEGORIAS com (id, titulo, cor)
+	//TODO: id da categoria é PK, e id=1 significa a categoria LIVRE
+	//TODO: id = 1 é valor default pros videos que foram criados sem categoria
+	//TODO: id, titulo e cor são todos campos obrigatórios
+	
+	
+	//TODO: a tabela vídeos vai ganhar uma FK chamada "categoriaID",
+	//obviamente para fazer a relação das tabelas.
+	
+	//TODO: " GET categorias/:id/videos/ " deve listar todos os videos DA MESMA categoria.
+	//(escolhendo a categoria X no ID, mostre todos os videos dela.)
+	
+	//TODO: " GET /videos/?search=jogos " (query params. search pelo título/nome.)
+	//filtra videos que contenham o valor definiddo na query params.
+	
 }
