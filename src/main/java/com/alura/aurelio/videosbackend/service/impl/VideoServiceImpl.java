@@ -35,35 +35,36 @@ public class VideoServiceImpl implements VideoService {
 
 	@Override
 	public void criar(VideoInputDTO videoInputDto) {
-		
-		if(videoInputDto.getIdCategoria() == null) {
-			videoInputDto.setIdCategoria(1L);
-		}
-		
+		videoInputDto = desnulificadorDeIdCategoria(videoInputDto);
 		validaDTO(videoInputDto);
-		//dto está valido
-		repository.save(dtoToVideo(videoInputDto));
-		
+		repository.save(dtoToVideo(videoInputDto, null));
 	}
 
 	@Override
-	public void atualizar(Video video, Long id) {
-		video.setId(id);
-		repository.save(video);
+	public void atualizar(VideoInputDTO videoInputDto, Long id) {
+		videoInputDto = desnulificadorDeIdCategoria(videoInputDto);
 		validaIdVideo(id);
-		
+		validaDTO(videoInputDto);
+		repository.save(dtoToVideo(videoInputDto, id));
 	}
 
 	@Override
 	public void remover(Long id) {
 		validaIdVideo(id);
 		repository.deleteById(id);
-		
 	}
 	
-	private Video dtoToVideo(VideoInputDTO videoInputDto) {
+	private VideoInputDTO desnulificadorDeIdCategoria(VideoInputDTO videoInputDto) {
+		if(videoInputDto.getIdCategoria() == null) {
+			videoInputDto.setIdCategoria(1L);
+		}
+		
+		return videoInputDto;
+	}
+	
+	private Video dtoToVideo(VideoInputDTO videoInputDto, Long id) {
 		return new Video(
-				null,
+				id,
 				videoInputDto.getTitulo(),
 				videoInputDto.getDescricao(),
 				videoInputDto.getUrl(),

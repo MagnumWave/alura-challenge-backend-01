@@ -12,7 +12,7 @@ public interface VideoService {
 	List<Video> obterTodos();
 	Optional<Video> obter(Long id) throws CustomException;
 	void criar(VideoInputDTO video);
-	void atualizar(Video video, Long id) throws CustomException;
+	void atualizar(VideoInputDTO video, Long id) throws CustomException;
 	void remover(Long id) throws CustomException;
 	
 }

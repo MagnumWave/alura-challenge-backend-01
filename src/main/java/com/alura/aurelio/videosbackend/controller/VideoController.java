@@ -49,14 +49,13 @@ public class VideoController {
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public void post(@Validated(VideoInputDTO.class) @RequestBody VideoInputDTO videoDTO) throws CustomException {
-		//service.criar(videoDTO.toVideo());
 		service.criar(videoDTO);
 	}
 	
 	@PutMapping("/{id}")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public void put(@Validated(VideoInputDTO.class) @RequestBody VideoInputDTO videoDTO, @PathVariable Long id) throws CustomException {
-		//service.atualizar(videoDTO, id);
+		service.atualizar(videoDTO, id);
 	}
 	
 	@DeleteMapping("/{id}")
@@ -74,12 +73,6 @@ public class VideoController {
 				video.getCategoria().getId()
 				);
 	};
-	
-	//TODO: terminar a conversão I/O de DTO para o ATUALIZAR
-	
-	
-	//TODO: a tabela vídeos vai ganhar uma FK chamada "categoriaID",
-	//obviamente para fazer a relação das tabelas.
 	
 	//TODO: " GET categorias/:id/videos/ " deve listar todos os videos DA MESMA categoria.
 	//(escolhendo a categoria X no ID, mostre todos os videos dela.)
