@@ -26,7 +26,7 @@ public class Categoria {
 	private String titulo;
 	
 	@Column(name = "COR", nullable = false, length = 30)
-	private String descricao;
+	private String cor;
 	
 	
 }

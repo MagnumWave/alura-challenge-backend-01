@@ -42,13 +42,15 @@ public class CategoriaController {
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public void post(@Validated(CategoriaInputDTO.class) @RequestBody CategoriaInputDTO categoriaDTO) throws CustomException {
-		service.criar(categoriaDTO.toCategoria());
+		service.criar(categoriaDTO);
+		//service.criar(categoriaDTO.toCategoria());
 	}
 	
 	@PutMapping("/{id}")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public void put(@Validated(CategoriaInputDTO.class) @RequestBody CategoriaInputDTO categoriaDTO, @PathVariable Long id) throws CustomException {
-		service.atualizar(categoriaDTO.toCategoria(), id);
+		service.atualizar(categoriaDTO, id);
+		//service.atualizar(categoriaDTO.toCategoria(), id);
 	}
 	
 	@DeleteMapping("/{id}")
@@ -56,5 +58,11 @@ public class CategoriaController {
 	public void delete(@PathVariable Long id) throws CustomException {
 		service.remover(id);
 	}
+	
+//	@GetMapping("/{id}/videos")
+//	@ResponseStatus(code = HttpStatus.OK)
+//	public Optional<Categoria> getById(@PathVariable Long id) throws CustomException {
+//		return service.obter(id);
+//	}
 	
 }
