@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alura.aurelio.videosbackend.domain.Categoria;
 import com.alura.aurelio.videosbackend.domain.Video;
 import com.alura.aurelio.videosbackend.domain.VideoInputDTO;
 import com.alura.aurelio.videosbackend.infra.CustomException;
@@ -53,6 +54,14 @@ public class VideoServiceImpl implements VideoService {
 		validaIdVideo(id);
 		repository.deleteById(id);
 	}
+	
+	@Override
+	public List<Video> obterVideosPorIdCategoria(Long id) {
+		validaIdCategoria(id);
+		Categoria categoria = categoriaRepository.findById(id).get();
+		return repository.findByCategoria(categoria);
+	}
+
 	
 	private VideoInputDTO desnulificadorDeIdCategoria(VideoInputDTO videoInputDto) {
 		if(videoInputDto.getIdCategoria() == null) {
@@ -109,6 +118,12 @@ public class VideoServiceImpl implements VideoService {
 		
 		if(!erros.isEmpty()) {
 			throw new CustomException("Esta requisição apresentou os seguintes erros: ", erros);
+		}
+	}
+
+	private void validaIdCategoria(Long id) {
+		if(!categoriaRepository.existsById(id)) {
+			throw new CustomException("Este ID de categoria não existe.");
 		}
 	}
 

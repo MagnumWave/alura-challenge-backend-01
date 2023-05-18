@@ -14,5 +14,7 @@ public interface VideoService {
 	void criar(VideoInputDTO video);
 	void atualizar(VideoInputDTO video, Long id) throws CustomException;
 	void remover(Long id) throws CustomException;
+	List<Video> obterVideosPorIdCategoria(Long id);
+	
 	
 }

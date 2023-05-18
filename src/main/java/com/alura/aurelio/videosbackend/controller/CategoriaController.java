@@ -1,5 +1,6 @@
 package com.alura.aurelio.videosbackend.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,16 +16,21 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.alura.aurelio.videosbackend.domain.Categoria;
 import com.alura.aurelio.videosbackend.domain.CategoriaInputDTO;
+import com.alura.aurelio.videosbackend.domain.Video;
+import com.alura.aurelio.videosbackend.domain.VideoOutputDTO;
 import com.alura.aurelio.videosbackend.infra.CustomException;
 import com.alura.aurelio.videosbackend.service.CategoriaService;
+import com.alura.aurelio.videosbackend.service.VideoService;
 
 @RestController
 @RequestMapping("/categorias")
 public class CategoriaController {
 	
 	@Autowired CategoriaService service;
+	@Autowired VideoService videoService;
 
 	@GetMapping
 	@ResponseStatus(code = HttpStatus.OK)
@@ -59,10 +65,25 @@ public class CategoriaController {
 		service.remover(id);
 	}
 	
-//	@GetMapping("/{id}/videos")
-//	@ResponseStatus(code = HttpStatus.OK)
-//	public Optional<Categoria> getById(@PathVariable Long id) throws CustomException {
-//		return service.obter(id);
-//	}
+	@GetMapping("/{id}/videos")
+	@ResponseStatus(code = HttpStatus.OK)
+	public List<VideoOutputDTO> getVideosByCategoryId(@PathVariable Long id) throws CustomException {
+		List<Video> inVideos = videoService.obterVideosPorIdCategoria(id);
+		List<VideoOutputDTO> outVideos = new ArrayList<VideoOutputDTO>();
+		
+		inVideos.forEach(inVideo -> outVideos.add(videoToOutput(inVideo)));
+		
+		return outVideos;
+	}
+	
+	private VideoOutputDTO videoToOutput(Video video) {
+		return new VideoOutputDTO(
+				video.getId(),
+				video.getTitulo(),
+				video.getDescricao(),
+				video.getUrl(),
+				video.getCategoria().getId()
+				);
+	};
 	
 }
