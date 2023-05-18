@@ -5,6 +5,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.SecondaryTable;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,6 +16,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @Table(name = "VIDEOS")
+@SecondaryTable(name = "CATEGORIAS")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Video {
@@ -30,6 +34,13 @@ public class Video {
 	
 	@Column(name = "URL", nullable = false, length = 70)
 	private String url;
+	
+	
+	//@OneToMany
+	@OneToOne
+	//@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name ="ID_CATEGORIA")
+	private Categoria categoria;
 	
 	
 }

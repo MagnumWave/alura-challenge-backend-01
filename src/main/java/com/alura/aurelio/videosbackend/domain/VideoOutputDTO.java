@@ -5,7 +5,9 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class VideoInputDTO {
+public class VideoOutputDTO {
+	
+	Long id;
 	
 	private String titulo;
 	
@@ -14,5 +16,5 @@ public class VideoInputDTO {
 	private String url;
 	
 	Long idCategoria;
-
+	
 }
