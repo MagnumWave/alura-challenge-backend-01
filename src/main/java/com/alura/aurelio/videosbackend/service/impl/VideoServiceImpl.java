@@ -27,6 +27,11 @@ public class VideoServiceImpl implements VideoService {
 	public List<Video> obterTodos() {
 		return repository.findAll();
 	}
+	
+	@Override
+	public List<Video> obterVideosPorTituloContendo(String search) {
+		return repository.findByTituloContaining(search);
+	}
 
 	@Override
 	public Optional<Video> obter(Long id) throws CustomException {
@@ -126,5 +131,7 @@ public class VideoServiceImpl implements VideoService {
 			throw new CustomException("Este ID de categoria não existe.");
 		}
 	}
+
+	
 
 }

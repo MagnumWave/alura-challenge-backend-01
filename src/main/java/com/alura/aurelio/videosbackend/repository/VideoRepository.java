@@ -12,5 +12,6 @@ import com.alura.aurelio.videosbackend.domain.Video;
 public interface VideoRepository extends JpaRepository<Video, Long>{
 
 	List<Video> findByCategoria(Categoria categoria);
+	List<Video> findByTituloContaining(String search);
 	
 }

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,6 +23,8 @@ import com.alura.aurelio.videosbackend.domain.VideoOutputDTO;
 import com.alura.aurelio.videosbackend.infra.CustomException;
 import com.alura.aurelio.videosbackend.service.VideoService;
 
+import io.micrometer.common.util.StringUtils;
+
 @RestController
 @RequestMapping("/videos")
 public class VideoController {
@@ -30,12 +33,19 @@ public class VideoController {
 
 	@GetMapping
 	@ResponseStatus(code = HttpStatus.OK)
-	public List<VideoOutputDTO> getAll() {
-		List<Video> inVideos = service.obterTodos();
+	public List<VideoOutputDTO> getAll(@RequestParam(name = "search", required = false)
+										String search) {
+
+		List<Video> inVideos = new ArrayList<Video>();
+		
+		if(StringUtils.isNotBlank(search)) {
+			inVideos = service.obterVideosPorTituloContendo(search);
+		} else {
+			inVideos = service.obterTodos();
+		}
+		
 		List<VideoOutputDTO> outVideos = new ArrayList<VideoOutputDTO>();
-		
 		inVideos.forEach(inVideo -> outVideos.add(videoToOutput(inVideo)));
-		
 		return outVideos;
 	}
 	
@@ -74,10 +84,7 @@ public class VideoController {
 				);
 	};
 	
-	//TODO: " GET categorias/:id/videos/ " deve listar todos os videos DA MESMA categoria.
-	//(escolhendo a categoria X no ID, mostre todos os videos dela.)
-	
-	//TODO: " GET /videos/?search=jogos " (query params. search pelo título/nome.)
-	//filtra videos que contenham o valor definiddo na query params.
+	//TODO: criar testes de unidade para os modelos e controller.
+	//TODO: criar testes de integração
 	
 }
