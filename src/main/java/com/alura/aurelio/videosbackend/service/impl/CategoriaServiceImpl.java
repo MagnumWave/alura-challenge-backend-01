@@ -18,7 +18,12 @@ import io.micrometer.common.util.StringUtils;
 @Service
 public class CategoriaServiceImpl implements CategoriaService {
 	
-	@Autowired CategoriaRepository repository;
+	CategoriaRepository repository;
+	
+	@Autowired 
+	public CategoriaServiceImpl(CategoriaRepository repository) {
+		this.repository = repository;
+	}
 
 	@Override
 	public List<Categoria> obterTodos() {
@@ -27,26 +32,44 @@ public class CategoriaServiceImpl implements CategoriaService {
 
 	@Override
 	public Optional<Categoria> obter(Long id) throws CustomException {
-		validaId(id);
+		boolean idIsValid = idIsValid(id);
+		if(!idIsValid) {
+			throw new CustomException("Este ID não existe.");
+		}
 		return repository.findById(id);
 	}
 
 	@Override
-	public void criar(CategoriaInputDTO categoriaInputDto) {
-		validaDTO(categoriaInputDto);
+	public void criar(CategoriaInputDTO categoriaInputDto) throws CustomException {
+		List<String> erros = errosDoDTO(categoriaInputDto);
+		if(!erros.isEmpty()) {
+			throw new CustomException("Esta requisição apresentou os seguintes erros: ", erros);
+		}
+		
 		repository.save(dtoToCategoria(categoriaInputDto, null));
 	}
 
 	@Override
-	public void atualizar(CategoriaInputDTO categoriaInputDto, Long id) {
-		validaId(id);
-		validaDTO(categoriaInputDto);
+	public void atualizar(CategoriaInputDTO categoriaInputDto, Long id) throws CustomException {
+		boolean idIsValid = idIsValid(id);
+		if(!idIsValid) {
+			throw new CustomException("Este ID não existe.");
+		}
+		
+		List<String> erros = errosDoDTO(categoriaInputDto);
+		if(!erros.isEmpty()) {
+			throw new CustomException("Esta requisição apresentou os seguintes erros: ", erros);
+		}
+		
 		repository.save(dtoToCategoria(categoriaInputDto, id));
 	}
 
 	@Override
-	public void remover(Long id) {
-		validaId(id);
+	public void remover(Long id) throws CustomException {
+		boolean idIsValid = idIsValid(id);
+		if(!idIsValid) {
+			throw new CustomException("Este ID não existe.");
+		}
 		repository.deleteById(id);
 		
 	}
@@ -59,13 +82,14 @@ public class CategoriaServiceImpl implements CategoriaService {
 				);
 	}
 
-	private void validaId(Long id) throws CustomException {
-		if(!repository.existsById(id)) {
-			throw new CustomException("Este ID não existe.");
-		}
+	public boolean idIsValid(Long id) throws CustomException {
+		return repository.existsById(id);
+//		if(!repository.existsById(id)) {
+//			throw new CustomException("Este ID não existe.");
+//		}
 	}
 	
-	private void validaDTO(CategoriaInputDTO categoriaInputDto) {
+	public List<String> errosDoDTO(CategoriaInputDTO categoriaInputDto) {
 		List<String> erros = new ArrayList<>();
 	
 		if(StringUtils.isEmpty(categoriaInputDto.getTitulo()) || StringUtils.isBlank(categoriaInputDto.getTitulo())) {
@@ -80,9 +104,14 @@ public class CategoriaServiceImpl implements CategoriaService {
 			erros.add("Cor da categoria não pode ter mais do que 30 caracteres.");
 		}
 		
-		if(!erros.isEmpty()) {
-			throw new CustomException("Esta requisição apresentou os seguintes erros: ", erros);
-		}
+		return erros;
 	}
+
+	@Override
+	public Long obterUltimoID() {
+		return repository.getLastId();
+	}
+
+	
 
 }

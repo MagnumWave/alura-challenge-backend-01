@@ -26,5 +26,5 @@ public class ErroEntityHandler extends ResponseEntityExceptionHandler {
 			ErroDTO erro = new ErroDTO(listaDeErros);
 			ResponseEntity<ErroDTO> response = new ResponseEntity<ErroDTO>(erro, HttpStatus.BAD_REQUEST);
 	        return response;
-	    }
+	}
 }

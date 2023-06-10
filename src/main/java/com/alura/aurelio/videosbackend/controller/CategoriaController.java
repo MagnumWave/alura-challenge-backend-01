@@ -29,14 +29,19 @@ import com.alura.aurelio.videosbackend.service.VideoService;
 @RequestMapping("/categorias")
 public class CategoriaController {
 	
-	@Autowired CategoriaService service;
-	@Autowired VideoService videoService;
+	CategoriaService service;
+	VideoService videoService;
+	
+	@Autowired 
+	public CategoriaController(CategoriaService service, VideoService videoService) {
+		this.service = service;
+		this.videoService = videoService;
+	}
 
 	@GetMapping
 	@ResponseStatus(code = HttpStatus.OK)
 	public List<Categoria> getAll() {
 		return service.obterTodos();
-		
 	}
 	
 	@GetMapping("/{id}")
@@ -49,22 +54,37 @@ public class CategoriaController {
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public void post(@Validated(CategoriaInputDTO.class) @RequestBody CategoriaInputDTO categoriaDTO) throws CustomException {
 		service.criar(categoriaDTO);
-		//service.criar(categoriaDTO.toCategoria());
+		
 	}
 	
-	@PutMapping("/{id}")
+	@PutMapping(value={"/","/id"})
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
-	public void put(@Validated(CategoriaInputDTO.class) @RequestBody CategoriaInputDTO categoriaDTO, @PathVariable Long id) throws CustomException {
+	public void put(@Validated(CategoriaInputDTO.class) @RequestBody CategoriaInputDTO categoriaDTO, 
+					@PathVariable(name="id",required = false) Long id) throws CustomException {
+		
+		if(idIsNull(id)) {
+			throw new CustomException("ID não pode ser nulo.");
+		}
 		service.atualizar(categoriaDTO, id);
-		//service.atualizar(categoriaDTO.toCategoria(), id);
 	}
 	
-	@DeleteMapping("/{id}")
+	@DeleteMapping()
+	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
+	public void deleteWithoutID(@PathVariable Long id) throws CustomException {
+		throw new CustomException("ID não pode ser nulo");
+	}
+	
+	@DeleteMapping(value={"/","/id"})
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
-	public void delete(@PathVariable Long id) throws CustomException {
+	public void delete(@PathVariable(name="id",required = false) Long id) throws CustomException {		
+		if(idIsNull(id)) {
+			throw new CustomException("ID não pode ser nulo.");
+		}
 		service.remover(id);
 	}
 	
+	
+
 	@GetMapping("/{id}/videos")
 	@ResponseStatus(code = HttpStatus.OK)
 	public List<VideoOutputDTO> getVideosByCategoryId(@PathVariable Long id) throws CustomException {
@@ -85,5 +105,9 @@ public class CategoriaController {
 				video.getCategoria().getId()
 				);
 	};
+	
+	public boolean idIsNull(Long id) {
+		return id==null;
+	}
 	
 }
