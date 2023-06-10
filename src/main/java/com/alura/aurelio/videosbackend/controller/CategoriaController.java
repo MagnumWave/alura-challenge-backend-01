@@ -57,7 +57,7 @@ public class CategoriaController {
 		
 	}
 	
-	@PutMapping(value={"/","/id"})
+	@PutMapping(value={"/","/{id}"})
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public void put(@Validated(CategoriaInputDTO.class) @RequestBody CategoriaInputDTO categoriaDTO, 
 					@PathVariable(name="id",required = false) Long id) throws CustomException {
@@ -68,19 +68,16 @@ public class CategoriaController {
 		service.atualizar(categoriaDTO, id);
 	}
 	
-	@DeleteMapping()
-	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
-	public void deleteWithoutID(@PathVariable Long id) throws CustomException {
-		throw new CustomException("ID não pode ser nulo");
-	}
-	
-	@DeleteMapping(value={"/","/id"})
+	@DeleteMapping(value={"/","/{id}"})
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
-	public void delete(@PathVariable(name="id",required = false) Long id) throws CustomException {		
+	public void delete(@PathVariable(name="id",required = false) Long id) throws CustomException {
+		System.out.println(id);
 		if(idIsNull(id)) {
 			throw new CustomException("ID não pode ser nulo.");
+		} else {
+			service.remover(id);
 		}
-		service.remover(id);
+		
 	}
 	
 	
