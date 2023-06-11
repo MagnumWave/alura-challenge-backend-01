@@ -20,8 +20,14 @@ import io.micrometer.common.util.StringUtils;
 @Service
 public class VideoServiceImpl implements VideoService {
 	
-	@Autowired VideoRepository repository;
-	@Autowired CategoriaRepository categoriaRepository;
+	VideoRepository repository;
+	CategoriaRepository categoriaRepository;
+	
+	@Autowired 
+	public VideoServiceImpl(VideoRepository repository, CategoriaRepository categoriaRepository) {
+		this.repository = repository;
+		this.categoriaRepository = categoriaRepository;
+	}
 
 	@Override
 	public List<Video> obterTodos() {
@@ -35,39 +41,72 @@ public class VideoServiceImpl implements VideoService {
 
 	@Override
 	public Optional<Video> obter(Long id) throws CustomException {
-		validaIdVideo(id);
+		
+		if(!isVideoIdValid(id)) {
+			throw new CustomException("Este ID de vídeo não existe.");
+		}
+		
 		return repository.findById(id);
 	}
 
 	@Override
 	public void criar(VideoInputDTO videoInputDto) {
+		System.out.println(videoInputDto);
 		videoInputDto = desnulificadorDeIdCategoria(videoInputDto);
-		validaDTO(videoInputDto);
+		System.out.println(videoInputDto);
+		
+		if(!isCategoriaIdValid(videoInputDto.getIdCategoria())) {
+			throw new CustomException("Este ID de categoria não existe.");
+		}
+		
+		List<String> errosDoDTO = errosDoDTO(videoInputDto);
+		if(!errosDoDTO.isEmpty()) {
+			throw new CustomException("Esta requisição apresentou os seguintes erros: ", errosDoDTO);
+		}
+		
 		repository.save(dtoToVideo(videoInputDto, null));
 	}
 
 	@Override
 	public void atualizar(VideoInputDTO videoInputDto, Long id) {
 		videoInputDto = desnulificadorDeIdCategoria(videoInputDto);
-		validaIdVideo(id);
-		validaDTO(videoInputDto);
+		
+		if(!isVideoIdValid(id)) {
+			throw new CustomException("Este ID de vídeo não existe.");
+		}
+		
+		if(!isCategoriaIdValid(id)) {
+			throw new CustomException("Este ID de categoria não existe.");
+		}
+		
+		
+		List<String> errosDoDTO = errosDoDTO(videoInputDto);
+		if(!errosDoDTO.isEmpty()) {
+			throw new CustomException("Esta requisição apresentou os seguintes erros: ", errosDoDTO);
+		}
+		
 		repository.save(dtoToVideo(videoInputDto, id));
 	}
 
 	@Override
 	public void remover(Long id) {
-		validaIdVideo(id);
+		
+		if(!isVideoIdValid(id)) {
+			throw new CustomException("Este ID de vídeo não existe.");
+		}
 		repository.deleteById(id);
 	}
 	
 	@Override
-	public List<Video> obterVideosPorIdCategoria(Long id) {
-		validaIdCategoria(id);
+	public List<Video> obterVideosPorIdCategoria(Long id) throws CustomException {
+		
+		if(!isCategoriaIdValid(id)) {
+			throw new CustomException("Este ID de categoria não existe.");
+		}
 		Categoria categoria = categoriaRepository.findById(id).get();
 		return repository.findByCategoria(categoria);
 	}
 
-	
 	private VideoInputDTO desnulificadorDeIdCategoria(VideoInputDTO videoInputDto) {
 		if(videoInputDto.getIdCategoria() == null) {
 			videoInputDto.setIdCategoria(1L);
@@ -86,19 +125,17 @@ public class VideoServiceImpl implements VideoService {
 				);
 	}
 
-	private void validaIdVideo(Long id) throws CustomException {
-		if(!repository.existsById(id)) {
-			throw new CustomException("Este ID de vídeo não existe.");
-		}
+	public boolean isVideoIdValid(Long id){
+		return repository.existsById(id);
 	}
 	
-	private void validaDTO(VideoInputDTO videoInputDto) {
+	public boolean isCategoriaIdValid(Long id) {
+		return categoriaRepository.existsById(id);
+	}
+	
+	public List<String> errosDoDTO(VideoInputDTO videoInputDto) {
 		
 		List<String> erros = new ArrayList<>();
-		
-		if(!categoriaRepository.existsById(videoInputDto.getIdCategoria())) {
-			erros.add("O valor de idCategoria não existe.");
-		}
 	
 		if(StringUtils.isEmpty(videoInputDto.getTitulo()) || StringUtils.isBlank(videoInputDto.getTitulo())) {
 			erros.add("Título do vídeo não pode ser nulo ou vazio.");
@@ -121,16 +158,11 @@ public class VideoServiceImpl implements VideoService {
 		}
 		
 		
-		if(!erros.isEmpty()) {
-			throw new CustomException("Esta requisição apresentou os seguintes erros: ", erros);
-		}
+		return erros;
 	}
 
-	private void validaIdCategoria(Long id) {
-		if(!categoriaRepository.existsById(id)) {
-			throw new CustomException("Este ID de categoria não existe.");
-		}
-	}
+	
+	
 
 	
 

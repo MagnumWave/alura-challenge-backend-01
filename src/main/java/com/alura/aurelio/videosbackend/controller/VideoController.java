@@ -29,7 +29,12 @@ import io.micrometer.common.util.StringUtils;
 @RequestMapping("/videos")
 public class VideoController {
 	
-	@Autowired VideoService service;
+	private VideoService service;
+	
+	@Autowired 
+	public VideoController(VideoService service){
+		this.service = service;
+	}
 
 	@GetMapping
 	@ResponseStatus(code = HttpStatus.OK)
@@ -58,19 +63,30 @@ public class VideoController {
 	
 	@PostMapping
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public void post(@Validated(VideoInputDTO.class) @RequestBody VideoInputDTO videoDTO) throws CustomException {
-		service.criar(videoDTO);
+	public void post(@Validated(VideoInputDTO.class) @RequestBody VideoInputDTO videoInputDTO) throws CustomException {
+		service.criar(videoInputDTO);
 	}
 	
-	@PutMapping("/{id}")
+	@PutMapping(value={"/","/{id}"})
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
-	public void put(@Validated(VideoInputDTO.class) @RequestBody VideoInputDTO videoDTO, @PathVariable Long id) throws CustomException {
+	public void put(@Validated(VideoInputDTO.class) @RequestBody VideoInputDTO videoDTO, 
+					@PathVariable(name="id",required = false) Long id) throws CustomException {
+		
+		if(idIsNull(id)) {
+			throw new CustomException("ID não pode ser nulo.");
+		}
+		
 		service.atualizar(videoDTO, id);
 	}
 	
-	@DeleteMapping("/{id}")
+	@DeleteMapping(value={"/","/{id}"})
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
-	public void delete(@PathVariable Long id) throws CustomException {
+	public void delete(@PathVariable(name="id",required = false) Long id) throws CustomException {
+		
+		if(idIsNull(id)) {
+			throw new CustomException("ID não pode ser nulo.");
+		}
+		
 		service.remover(id);
 	}
 	
@@ -84,7 +100,8 @@ public class VideoController {
 				);
 	};
 	
-	//TODO: criar testes de unidade para os modelos e controller.
-	//TODO: criar testes de integração
+	public boolean idIsNull(Long id) {
+		return id==null;
+	}
 	
 }

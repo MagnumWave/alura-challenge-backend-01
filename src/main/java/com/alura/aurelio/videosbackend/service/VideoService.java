@@ -17,5 +17,4 @@ public interface VideoService {
 	List<Video> obterVideosPorIdCategoria(Long id);
 	List<Video> obterVideosPorTituloContendo(String search);
 	
-	
 }

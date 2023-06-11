@@ -7,28 +7,24 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.alura.aurelio.videosbackend.service.CategoriaService;
 import com.alura.aurelio.videosbackend.service.VideoService;
 
-class CategoriaControllerTest {
+class VideoControllerTest {
 	
 	@Mock
-	private CategoriaService service;
+	private VideoService service;
 	
 	@Mock
-	private VideoService videoService;
-	
-	@Mock
-	private CategoriaController controller;
+	private VideoController controller;
 	
 	@BeforeEach
-	public void beforeEach() {
+	void beforeEarch() {
 		MockitoAnnotations.openMocks(this);
-		this.controller = new CategoriaController(service, videoService);
+		this.controller = new VideoController(service);
 	}
 
 	@Test
-	void nãoDeveriaAceitarIdNuloParaMetodosPutEDelete() {
+	void nãoDeveriaAceitarIdVideoNuloParaMetodosPutEDelete() {
 		assertFalse(controller.idIsNull(1L));
 		assertTrue(controller.idIsNull(null));
 	}

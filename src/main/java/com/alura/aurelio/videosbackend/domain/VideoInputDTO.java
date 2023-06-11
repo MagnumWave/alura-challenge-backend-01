@@ -13,6 +13,6 @@ public class VideoInputDTO {
 	
 	private String url;
 	
-	Long idCategoria;
+	private Long idCategoria;
 
 }

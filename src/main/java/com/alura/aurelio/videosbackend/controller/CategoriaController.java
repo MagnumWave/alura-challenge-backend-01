@@ -65,19 +65,19 @@ public class CategoriaController {
 		if(idIsNull(id)) {
 			throw new CustomException("ID não pode ser nulo.");
 		}
+		
 		service.atualizar(categoriaDTO, id);
 	}
 	
 	@DeleteMapping(value={"/","/{id}"})
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public void delete(@PathVariable(name="id",required = false) Long id) throws CustomException {
-		System.out.println(id);
+		
 		if(idIsNull(id)) {
 			throw new CustomException("ID não pode ser nulo.");
-		} else {
-			service.remover(id);
 		}
 		
+		service.remover(id);
 	}
 	
 	

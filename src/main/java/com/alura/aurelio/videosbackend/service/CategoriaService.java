@@ -15,6 +15,4 @@ public interface CategoriaService {
 	void atualizar(CategoriaInputDTO categoria, Long id) throws CustomException;
 	void remover(Long id) throws CustomException;
 	
-	Long obterUltimoID();
-	
 }

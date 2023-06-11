@@ -32,8 +32,7 @@ public class CategoriaServiceImpl implements CategoriaService {
 
 	@Override
 	public Optional<Categoria> obter(Long id) throws CustomException {
-		boolean idIsValid = idIsValid(id);
-		if(!idIsValid) {
+		if(!idIsValid(id)) {
 			throw new CustomException("Este ID não existe.");
 		}
 		return repository.findById(id);
@@ -51,8 +50,7 @@ public class CategoriaServiceImpl implements CategoriaService {
 
 	@Override
 	public void atualizar(CategoriaInputDTO categoriaInputDto, Long id) throws CustomException {
-		boolean idIsValid = idIsValid(id);
-		if(!idIsValid) {
+		if(!idIsValid(id)) {
 			throw new CustomException("Este ID não existe.");
 		}
 		
@@ -82,11 +80,8 @@ public class CategoriaServiceImpl implements CategoriaService {
 				);
 	}
 
-	public boolean idIsValid(Long id) throws CustomException {
+	public boolean idIsValid(Long id) throws IllegalArgumentException {
 		return repository.existsById(id);
-//		if(!repository.existsById(id)) {
-//			throw new CustomException("Este ID não existe.");
-//		}
 	}
 	
 	public List<String> errosDoDTO(CategoriaInputDTO categoriaInputDto) {
@@ -106,12 +101,4 @@ public class CategoriaServiceImpl implements CategoriaService {
 		
 		return erros;
 	}
-
-	@Override
-	public Long obterUltimoID() {
-		return repository.getLastId();
-	}
-
-	
-
 }
